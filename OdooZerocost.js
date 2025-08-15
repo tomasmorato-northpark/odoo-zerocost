@@ -1,3 +1,4 @@
+(function() {
 // ==============================
 // Step 0: Click the "Zero Cost" category first
 [...document.querySelectorAll('span.category-simple-button')]
@@ -1044,3 +1045,4 @@ waitForProductById('article_product_5605', () => {
     document.querySelector(id)?.click();
   });
 });
+})();
