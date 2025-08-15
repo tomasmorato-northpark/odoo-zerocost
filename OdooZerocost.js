@@ -1038,5 +1038,9 @@ const productsToHandle = [
 // Step 4: Wait for the first product container before running all handlers
 waitForProductById('article_product_5605', () => {
   productsToHandle.forEach(p => handleProductOrders(p.name, p.selector));
-});
 
+  // Safe place for "always click these two"
+  ['#article_product_5594', '#article_product_13938'].forEach(id => {
+    document.querySelector(id)?.click();
+  });
+});
