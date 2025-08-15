@@ -1039,8 +1039,4 @@ const productsToHandle = [
 waitForProductById('article_product_5605', () => {
   productsToHandle.forEach(p => handleProductOrders(p.name, p.selector));
 });
-// Always click these two
-  ['#article_product_5594', '#article_product_13938'].forEach(id => {
-    document.querySelector(id)?.click();
 
-     });
