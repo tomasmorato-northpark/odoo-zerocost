@@ -1,5 +1,7 @@
 (function() {
 // 11:45 08152025 ==============================
+// Step Start: Click the "Home" breadcrumb button first
+  document.querySelector('span.breadcrumb-button.breadcrumb-home')?.click();
 // Step 0: Click the "Zero Cost" category first
 [...document.querySelectorAll('span.category-simple-button')]
   .find(el => el.textContent.trim() === 'Zero Cost')
@@ -1046,4 +1048,5 @@ waitForProductById('article_product_5605', () => {
   });
 });
 })();
+
 
