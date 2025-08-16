@@ -2,6 +2,7 @@
 // 11:45 08152025 ==============================
 // Step Start: Click the "Home" breadcrumb button first
   document.querySelector('span.breadcrumb-button.breadcrumb-home')?.click();
+
   // Intro: Wait for the product image to appear
   const waitForImage = setInterval(() => {
     const targetImage = document.querySelector('div.product-img img[alt^="DM01A FRIED FRESH PRAWN DUMPLING"]');
@@ -11,6 +12,8 @@
 [...document.querySelectorAll('span.category-simple-button')]
   .find(el => el.textContent.trim() === 'Zero Cost')
   ?.click();
+}
+  }, 200); // check every 200ms
 
 // ==============================
 // Step 1: Wait for a specific product container to appear
@@ -1053,6 +1056,7 @@ waitForProductById('article_product_5605', () => {
   });
 });
 })();
+
 
 
 
