@@ -1,6 +1,7 @@
 (function() {
 // 11:45 08152025 ==============================
-// Step Start: Click the "Home" breadcrumb button first
+// Step Start: Click "X" exit Search Bar then Click the "Home" breadcrumb button first
+  document.querySelector('.fa-times.search-clear-partner').click();
   document.querySelector('span.breadcrumb-button.breadcrumb-home')?.click();
 
   // Intro: Wait for the product image to appear
@@ -1056,6 +1057,7 @@ waitForProductById('article_product_5605', () => {
   });
 });
 })();
+
 
 
 
