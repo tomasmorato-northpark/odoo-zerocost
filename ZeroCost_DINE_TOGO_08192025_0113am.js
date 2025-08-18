@@ -1,4 +1,382 @@
 (function() {
+// Get the table text inside the .table-name span
+let tableText = document.querySelector('.table-name')?.innerText.replace(/[()]/g, '').trim();
+
+if (!tableText) {
+  console.log("No table name found!");
+} else if (/^T\d{1,2}$/.test(tableText)) {
+  // Matches T1 to T50
+  let num = parseInt(tableText.slice(1), 10);
+  if (num >= 1 && num <= 50) {
+    console.log("Running JS1 for", tableText);
+    // === JS1 CODE HERE ===
+    // 01:11 am 08192025 ==============================
+// Step Start: Click "X" exit Search Bar then Click the "Home" breadcrumb button first
+  document.querySelector('.fa-times.search-clear-partner').click();
+  document.querySelector('span.breadcrumb-button.breadcrumb-home')?.click();
+
+  // Intro: Wait for the product image to appear
+  const waitForImage = setInterval(() => {
+    const targetImage = document.querySelector('div.product-img img[alt^="DM01A FRIED FRESH PRAWN DUMPLING"]');
+    if (targetImage) {
+      clearInterval(waitForImage); // Stop checking
+// Step 0: Click the "Zero Cost" category first
+[...document.querySelectorAll('span.category-simple-button')]
+  .find(el => el.textContent.trim() === 'Zero Cost')
+  ?.click();
+}
+  }, 200); // check every 200ms
+
+// ==============================
+// Step 1: Wait for a specific product container to appear
+function waitForProductById(productId, callback, timeout = 10000) {
+  const start = Date.now();
+  const interval = setInterval(() => {
+    const product = document.getElementById(productId);
+    if (product) {
+      clearInterval(interval);
+      callback();
+    } else if (Date.now() - start > timeout) {
+      clearInterval(interval);
+      console.log(`Timeout: Product with ID ${productId} not found.`);
+    }
+  }, 200);
+}
+
+// ==============================
+// Step 2: Reusable handler for total orders and clicks
+function handleProductOrders(productName, containerSelector) {
+  let productLines = [...document.querySelectorAll('li.orderline')]
+    .filter(li => {
+      let nameEl = li.querySelector('span.product-name');
+      if (!nameEl) return false;
+      let nameText = nameEl.childNodes[0]?.textContent.trim();
+      return nameText === productName;
+    });
+
+  if (productLines.length > 0) {
+    let totalOrders = productLines.reduce((sum, li) => {
+      let qtyEm = li.querySelector('ul.info-list li.info em');
+      let qty = qtyEm ? parseFloat(qtyEm.textContent.trim()) : 1;
+      return sum + qty;
+    }, 0);
+
+    console.log(`${productName} found with a total of ${totalOrders} order(s).`);
+
+    let container = document.querySelector(containerSelector);
+    if (container) {
+      for (let i = 0; i < totalOrders; i++) {
+        container.click();
+      }
+    } else {
+      console.log(`Container for ${productName} not found.`);
+    }
+  } else {
+    console.log(`${productName} not found.`);
+  }
+}
+
+// ==============================
+// Step 3: List of products to handle
+const productsToHandle = [
+  // HONGKONG CHOPSTICK
+  { name: 'NS01L NANKING BEEF LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS01R NANKING BEEF RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02L BEEF TENDON LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02R BEEF TENDON RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03L PRAWN DUMPLING LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03R PRAWN DUMPLING RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04L WANTON LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04R WANTON RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05L 3KINDS MUSHROOM LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05R 3KINDS MUSHROOM RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06L DOUBLE PORK RIB LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06R DOUBLE PORK RIB RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07L NANKING BF/WANTON LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07R NANKING BF/WANTON RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08L BEEF TNDON/WANTON LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08R BEEF TNDON/WANTON RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09L PRWN DM/NNKING BF LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09R PRWN DM/NNKING BF RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10L PRWN DM/MUSHROOM LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10R PRWN DM/MUSHROOM RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11L PRWN DM/BF TNDON LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11R PRWN DM/BF TNDON RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12L WANTON/MUSHROOM LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12R WANTON/MUSHROOM RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13L NANKING BF/TNDON LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13R NANKING BF/TNDON RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14L PORK RIB/PRWN DM LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14R PORK RIB/PRWN DM RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15L PORK RIB/WANTON LP HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15R PORK RIB/WANTON RG HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS16 SZCHUAN TAN TAN MIEN HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS88 ULTIMATE NOODLES HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS90 WHITE CHICKEN HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS91 SOY CHICKEN HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'NS92 PLAIN HONGKONG NOODLES', selector: '#article_product_13937' },
+  // Canton CHOPSTICK
+  { name: 'NS01L NANKING BEEF LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS01R NANKING BEEF RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02L BEEF TENDON LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02R BEEF TENDON RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03L PRAWN DUMPLING LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03R PRAWN DUMPLING RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04L WANTON LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04R WANTON RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05L 3KINDS MUSHROOM LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05R 3KINDS MUSHROOM RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06L DOUBLE PORK RIB LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06R DOUBLE PORK RIB RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07L NANKING BF/WANTON LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07R NANKING BF/WANTON RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08L BEEF TNDON/WANTON LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08R BEEF TNDON/WANTON RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09L PRWN DM/NNKING BF LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09R PRWN DM/NNKING BF RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10L PRWN DM/MUSHROOM LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10R PRWN DM/MUSHROOM RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11L PRWN DM/BF TNDON LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11R PRWN DM/BF TNDON RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12L WANTON/MUSHROOM LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12R WANTON/MUSHROOM RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13L NANKING BF/TNDON LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13R NANKING BF/TNDON RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14L PORK RIB/PRWN DM LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14R PORK RIB/PRWN DM RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15L PORK RIB/WANTON LP CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15R PORK RIB/WANTON RG CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS16 SZCHUAN TAN TAN MIEN CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS88 ULTIMATE NOODLES CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS90 WHITE CHICKEN CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS91 SOY CHICKEN CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'NS92 PLAIN CANTON NOODLES', selector: '#article_product_13937' } ,
+  // Flat Shanghai Noodles CHOPSTICK
+  { name: 'NS01L NANKING BEEF LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS01R NANKING BEEF RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02L BEEF TENDON LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02R BEEF TENDON RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03L PRAWN DUMPLING LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03R PRAWN DUMPLING RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04L WANTON LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04R WANTON RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05L 3KINDS MUSHROOM LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05R 3KINDS MUSHROOM RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06L DOUBLE PORK RIB LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06R DOUBLE PORK RIB RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07L NANKING BF/WANTON LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07R NANKING BF/WANTON RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08L BEEF TNDON/WANTON LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08R BEEF TNDON/WANTON RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09L PRWN DM/NNKING BF LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09R PRWN DM/NNKING BF RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10L PRWN DM/MUSHROOM LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10R PRWN DM/MUSHROOM RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11L PRWN DM/BF TNDON LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11R PRWN DM/BF TNDON RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12L WANTON/MUSHROOM LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12R WANTON/MUSHROOM RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13L NANKING BF/TNDON LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13R NANKING BF/TNDON RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14L PORK RIB/PRWN DM LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14R PORK RIB/PRWN DM RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15L PORK RIB/WANTON LP FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15R PORK RIB/WANTON RG FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS16 SZCHUAN TAN TAN MIEN FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS88 ULTIMATE NOODLES FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS90 WHITE CHICKEN FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS91 SOY CHICKEN FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'NS92 PLAIN FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  // Herb Noodles CHOPSTICK
+  { name: 'NS01L NANKING BEEF LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS01R NANKING BEEF RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02L BEEF TENDON LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02R BEEF TENDON RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03L PRAWN DUMPLING LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03R PRAWN DUMPLING RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04L WANTON LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04R WANTON RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05L 3KINDS MUSHROOM LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05R 3KINDS MUSHROOM RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06L DOUBLE PORK RIB LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06R DOUBLE PORK RIB RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07L NANKING BF/WANTON LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07R NANKING BF/WANTON RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08L BEEF TNDON/WANTON LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08R BEEF TNDON/WANTON RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09L PRWN DM/NNKING BF LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09R PRWN DM/NNKING BF RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10L PRWN DM/MUSHROOM LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10R PRWN DM/MUSHROOM RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11L PRWN DM/BF TNDON LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11R PRWN DM/BF TNDON RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12L WANTON/MUSHROOM LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12R WANTON/MUSHROOM RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13L NANKING BF/TNDON LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13R NANKING BF/TNDON RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14L PORK RIB/PRWN DM LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14R PORK RIB/PRWN DM RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15L PORK RIB/WANTON LP HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15R PORK RIB/WANTON RG HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS16 SZCHUAN TAN TAN MIEN HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS88 ULTIMATE NOODLES HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS90 WHITE CHICKEN HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS91 SOY CHICKEN HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'NS92 PLAIN HERB NOODLES', selector: '#article_product_13937' },
+  // Empress Noodles CHOPSTICK
+  { name: 'NS01L NANKING BEEF LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS01R NANKING BEEF RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02L BEEF TENDON LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02R BEEF TENDON RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03L PRAWN DUMPLING LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03R PRAWN DUMPLING RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04L WANTON LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04R WANTON RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05L 3KINDS MUSHROOM LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05R 3KINDS MUSHROOM RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06L DOUBLE PORK RIB LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06R DOUBLE PORK RIB RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07L NANKING BF/WANTON LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07R NANKING BF/WANTON RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08L BEEF TNDON/WANTON LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08R BEEF TNDON/WANTON RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09L PRWN DM/NNKING BF LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09R PRWN DM/NNKING BF RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10L PRWN DM/MUSHROOM LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10R PRWN DM/MUSHROOM RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11L PRWN DM/BF TNDON LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11R PRWN DM/BF TNDON RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12L WANTON/MUSHROOM LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12R WANTON/MUSHROOM RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13L NANKING BF/TNDON LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13R NANKING BF/TNDON RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14L PORK RIB/PRWN DM LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14R PORK RIB/PRWN DM RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15L PORK RIB/WANTON LP EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15R PORK RIB/WANTON RG EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS16 SZCHUAN TAN TAN MIEN EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS88 ULTIMATE NOODLES EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS90 WHITE CHICKEN EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS91 SOY CHICKEN EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'NS92 PLAIN EMPRESS NOODLES', selector: '#article_product_13937' },  
+  // Whole wheat Noodles CHOPSTICK
+  { name: 'NS01L NANKING BEEF LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS01R NANKING BEEF RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02L BEEF TENDON LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS02R BEEF TENDON RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03L PRAWN DUMPLING LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS03R PRAWN DUMPLING RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04L WANTON LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS04R WANTON RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05L 3KINDS MUSHROOM LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS05R 3KINDS MUSHROOM RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06L DOUBLE PORK RIB LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS06R DOUBLE PORK RIB RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07L NANKING BF/WANTON LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS07R NANKING BF/WANTON RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08L BEEF TNDON/WANTON LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS08R BEEF TNDON/WANTON RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09L PRWN DM/NNKING BF LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS09R PRWN DM/NNKING BF RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10L PRWN DM/MUSHROOM LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS10R PRWN DM/MUSHROOM RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11L PRWN DM/BF TNDON LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS11R PRWN DM/BF TNDON RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12L WANTON/MUSHROOM LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS12R WANTON/MUSHROOM RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13L NANKING BF/TNDON LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS13R NANKING BF/TNDON RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14L PORK RIB/PRWN DM LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS14R PORK RIB/PRWN DM RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15L PORK RIB/WANTON LP WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS15R PORK RIB/WANTON RG WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS16 SZCHUAN TAN TAN MIEN WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS88 ULTIMATE NOODLES WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS90 WHITE CHICKEN WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS91 SOY CHICKEN WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'NS92 PLAIN WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  // Hongkong BN CHOPSTICK
+  { name: 'BN17 NANKING BEEF HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'BN18 ANISEED BEEF TENDON HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'BN19 WANTON HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'BN20 FRESH PRAWN DUMPLING HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'BN21 3KINDS MUSHROOM HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'BN22 DOUBLE PORK RIB HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'BN23 SZE TANTAN MIEN HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'BN90 BN MIX HONGKONG NOODLES', selector: '#article_product_13937' },
+  { name: 'BN92 PLAIN CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'BN92 PLAIN HONGKONG NOODLES', selector: '#article_product_13937' },
+  // Canton BN CHOPSTICK
+  { name: 'BN17 NANKING BEEF CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'BN18 ANISEED BEEF TENDON CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'BN19 WANTON CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'BN20 FRESH PRAWN DUMPLING CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'BN21 3KINDS MUSHROOM CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'BN22 DOUBLE PORK RIB CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'BN23 SZE TANTAN MIEN CANTON NOODLES', selector: '#article_product_13937' },
+  { name: 'BN90 BN MIX CANTON NOODLES', selector: '#article_product_13937' },  
+  // BN Flat Shanghai CHOPSTICK
+  { name: 'BN17 NANKING BEEF FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'BN18 ANISEED BEEF TENDON FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'BN19 WANTON FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'BN20 FRESH PRAWN DUMPLING FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'BN21 3KINDS MUSHROOM FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'BN22 DOUBLE PORK RIB FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'BN23 SZE TANTAN MIEN FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'BN90 BN MIX FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  { name: 'BN92 PLAIN FLAT SHANGHAI NOODLES', selector: '#article_product_13937' },
+  // BN Herb CHOPSTICK
+  { name: 'BN17 NANKING BEEF HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'BN18 ANISEED BEEF TENDON HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'BN19 WANTON HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'BN20 FRESH PRAWN DUMPLING HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'BN21 3KINDS MUSHROOM HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'BN22 DOUBLE PORK RIB HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'BN23 SZE TANTAN MIEN HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'BN90 BN MIX HERB NOODLES', selector: '#article_product_13937' },
+  { name: 'BN92 PLAIN HERB NOODLES', selector: '#article_product_13937' },
+  // BN EMPRESS CHOPSTICK
+  { name: 'BN17 NANKING BEEF EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'BN18 ANISEED BEEF TENDON EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'BN19 WANTON EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'BN20 FRESH PRAWN DUMPLING EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'BN21 3KINDS MUSHROOM EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'BN22 DOUBLE PORK RIB EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'BN23 SZE TANTAN MIEN EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'BN90 BN MIX EMPRESS NOODLES', selector: '#article_product_13937' },
+  { name: 'BN92 PLAIN EMPRESS NOODLES', selector: '#article_product_13937' },
+  // BN WHOLE WHEAT NOODLES CHOPSTICK
+  { name: 'BN17 NANKING BEEF WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'BN18 ANISEED BEEF TENDON WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'BN19 WANTON WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'BN20 FRESH PRAWN DUMPLING WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'BN21 3KINDS MUSHROOM WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'BN22 DOUBLE PORK RIB WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'BN23 SZE TANTAN MIEN WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'BN90 BN MIX WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  { name: 'BN92 PLAIN WHOLE WHEAT NOODLES', selector: '#article_product_13937' },
+  // Yee Mien Noodles
+  { name: 'YM2 FRIED WANTON', selector: '#article_product_13937' },
+  // Add more products here          
+];
+
+// ==============================
+// Step 4: Wait for the first product container before running all handlers
+waitForProductById('article_product_5605', () => {
+  productsToHandle.forEach(p => handleProductOrders(p.name, p.selector));
+
+  // Safe place for "always click these"
+['#article_product_5599', '#article_product_5598', '#article_product_5596'].forEach(id => {
+  document.querySelector(id)?.click();
+});
+});
+  }
+} else if (/^(GF|TO|TL|DD)\d{1,2}$/.test(tableText)) {
+  // Matches GF1-50, TO1-50, TL1-50, DD1-50
+  let prefix = tableText.match(/^[A-Z]+/)[0];
+  let num = parseInt(tableText.replace(/\D/g, ''), 10);
+  if (num >= 1 && num <= 50) {
+    console.log("Running JS2 for", prefix, num);
 // 01:11 am 08192025 ==============================
 // Step Start: Click "X" exit Search Bar then Click the "Home" breadcrumb button first
   document.querySelector('.fa-times.search-clear-partner').click();
@@ -1056,7 +1434,14 @@ waitForProductById('article_product_5605', () => {
     document.querySelector(id)?.click();
   });
 });
+
+ }
+} else {
+  console.log("Table format not recognized:", tableText);
+}
+
 })();
+
 
 
 
