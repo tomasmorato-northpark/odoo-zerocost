@@ -1,14 +1,7 @@
 (async () => {
     const pos = odoo.__WOWL_DEBUG__.root.env.services.pos;
 
-    async function addProduct(productId, qty) {
-        for (let i = 0; i < qty; i++) {
-            await pos.addLineToCurrentOrder({
-                product_id: pos.models["product.product"].get(productId)
-            });
-        }
-    }
-    
+        
  // FOOD PRODUCT ID : CONTAINER PRODUCT ID
     const rules = {
         "DM01A FRIED FRESH PRAWN DUMPLING (3 PCS)": [5602]
@@ -405,31 +398,7 @@
         "DR22 CALAMANSI JUICE": [13647]        
     };
 
-        // Always add 3 Chopsticks and 3 Spoon/Fork/Tissue
-    await addProduct(13938, 3); // Chopsticks
-    await addProduct(13937, 3); // Spoon/Fork/Tissue
-
-    const order = pos.selectedOrder;
-
-        // Count all food quantities that are in the rules
-    let foodCount = 0;
-
-    for (const line of order.get_orderlines()) {
-        if (rules[line.product_id.display_name]) {
-            foodCount += line.qty;
-        }
-    }
-
-    // Add 1 Eco Bag if there are 6 or more food items
-    const ecoBagQty = Math.floor(foodCount / 6);
-
-for (let i = 0; i < ecoBagQty; i++) {
-    await pos.addLineToCurrentOrder({
-        product_id: pos.models["product.product"].get(5570)
-    });
-    console.log("Eco Bag added.");
-}
-
+  
 // Add containers
     for (const line of pos.selectedOrder.get_orderlines()) {
         const containers = rules[line.product_id.display_name];
