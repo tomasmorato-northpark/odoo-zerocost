@@ -2,16 +2,17 @@
     const pos = odoo.__WOWL_DEBUG__.root.env.services.pos;
 
     async function addProduct(productId, qty) {
-        for (let i = 0; i < qty; i++) {
-            await pos.addLineToCurrentOrder({
-                product_id: pos.models["product.product"].get(productId)
-            });
-        }
-    }
+    await pos.addLineToCurrentOrder({
+        product_id: pos.models["product.product"].get(productId)
+    });
+
+    const line = pos.selectedOrder.get_selected_orderline();
+    line.set_quantity(qty);
+}
     
  // FOOD PRODUCT ID : CONTAINER PRODUCT ID
     const rules = {
-        "DM01A FRIED FRESH PRAWN DUMPLING (3 PCS)": [5602]
+        "DM01A FRIED FRESH PRAWN DUMPLING (3 PCS)": [5602],
         "DM01A STEAM FRESH PRAWN DUMPLING (3 PCS)": [5602],
         "DM01B FRIED FRESH PRAWN DUMPLING (6 PCS)": [5603],
         "DM01B STEAM FRESH PRAWN DUMPLING (6 PCS)": [5603],
@@ -220,7 +221,7 @@
         "NS06R DOUBLE PORK RIB RG WHOLE WHEAT NOODLES": [5606,8969],
         "NS07L NANKING BF/WANTON LP WHOLE WHEAT NOODLES": [5604,8969],
         "NS07R NANKING BF/WANTON RG WHOLE WHEAT NOODLES": [5606,8969],
-        "NS08L BEEF TNDON/WANTON LP WHOLE WHEAT NOODLES: [5604,8969],
+        "NS08L BEEF TNDON/WANTON LP WHOLE WHEAT NOODLES": [5604,8969],
         "NS08R BEEF TNDON/WANTON RG WHOLE WHEAT NOODLES": [5606,8969],
         "NS09L PRWN DM/NNKING BF LP WHOLE WHEAT NOODLES": [5604,8969],
         "NS09R PRWN DM/NNKING BF RG WHOLE WHEAT NOODLES": [5606,8969],
