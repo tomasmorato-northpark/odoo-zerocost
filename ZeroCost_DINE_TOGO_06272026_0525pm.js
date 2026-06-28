@@ -409,6 +409,7 @@
         // Always add 3 Chopsticks and 3 Spoon/Fork/Tissue
     await addProduct(13938, 3); // Chopsticks
     await addProduct(13937, 3); // Spoon/Fork/Tissue
+    await addProduct(5594, 1); // CTC
 
     const order = pos.selectedOrder;
 
