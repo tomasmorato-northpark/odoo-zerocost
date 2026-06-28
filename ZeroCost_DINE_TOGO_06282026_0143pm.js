@@ -406,10 +406,7 @@
         "DR22 CALAMANSI JUICE": [13647]        
     };
 
-        // Always add 3 Chopsticks and 3 Spoon/Fork/Tissue
-    await addProduct(13938, 3); // Chopsticks
-    await addProduct(13937, 3); // Spoon/Fork/Tissue
-    await addProduct(5594, 1); // CTC
+        
 
     const order = pos.selectedOrder;
 
@@ -446,6 +443,11 @@ for (let i = 0; i < ecoBagQty; i++) {
             }
         }
     }
-
+    
+// Always add 3 Chopsticks and 3 Spoon/Fork/Tissue
+    await addProduct(13938, 3); // Chopsticks
+    await addProduct(13937, 3); // Spoon/Fork/Tissue
+    await addProduct(5594, 1); // CTC
+    
     console.log("Done.");
 })();
